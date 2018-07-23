@@ -1,0 +1,33 @@
+#box {
+    width: 1000px;
+	height: 370px;
+    background: white;
+    margin: 0 auto;
+    text-align: center;
+    margin-top: 50px;
+    padding: 50px;
+}
+
+#p_line {
+    border-bottom: 1px solid gray;
+    height: 40px;
+    line-height: 50px;
+    margin-bottom: 20px;
+}
+
+.txtBox {
+    width: 300px;
+    height: 40px;
+    margin-top: 20px;
+    border: 1px solid gray;
+    border-radius: 3px;
+    padding-left: 10px;
+}
+
+.btn {
+    width: 312px;
+    height: 40px;
+    margin-top: 20px;
+    background-color: red;
+    color: white;
+}

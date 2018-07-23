@@ -1,0 +1,50 @@
+#login {
+    width: 1000px;
+    margin: 0 auto;
+}
+
+#login p {
+    text-align: center;
+}
+
+#login p img {
+    width: 500px;
+}
+
+#t1 {
+    margin-top: 25px;
+    font-size: 28px;
+}
+
+#t2 {
+    color: #666666;
+}
+
+.textbox {
+    width: 350px;
+    height: 40px;
+    border-radius: 3px;
+    border: 1px solid #e2b709;
+    padding-left: 10px;
+}
+
+.submit {
+    width: 360px;
+    height: 40px;
+    border-radius: 3px;
+    border: 1px;
+	background-color: #F0184d;
+	color: white;
+}
+.text{
+	width: 360px;
+	color: #999999;
+	margin: 0 auto;
+}
+.button{
+	width: 360px;
+	height: 40px;
+	background-color: white;
+	border-radius: 3px;
+	border: 1px solid #666666;
+}
