@@ -1,0 +1,38 @@
+<!DOCTYPE  html>
+<html>
+
+<head>
+    <title>json测试</title>
+    <meta charset="utf-8" />
+    <script src="../js/jquery-1.8.3.js"></script>
+    <script>
+        var excludeSpecial = function (s) {
+            // 去掉转义字符  
+            s = s.replace('//', '');
+            // 去掉特殊字符  
+            //s = s.replace(/[\@\#\$\%\^\&\*\{\}\:\"\L\<\>\?] /);
+            return s;
+        };
+        $(function () {
+            $("#btn").click(function () {
+                var json =
+                    '{"description":"古人经受了太多的战争和灾害之苦，梦寐以求的就是宁静和太平，先辈的遗愿选择了将祖先安葬于凌空绝壁之上的崖葬，让祖先在一个青山环抱、碧水环绕、宁静幽美的环境中得到永远安息。当时的人坚信:\"弥高者以为至孝，高葬者必有好报\"，他们就把祖先的棺椁抬上溪流边陡峭的绝壁，放置在几乎与水面垂直的天然岩洞中，久而久之，就形成了独特的悬棺景观。","lat":28.097145,"lon":116.971952,"name":"升棺表演","strokeId":105}';
+                var json1 =
+                    '{"description":"龙虎山的泸溪河发源于崇山峻岭之中，素有“小漓江”之称，它似一条随风舞动的绿绸，在充满神奇传说的龙虎山奇峰秀谷间动情地渲染着，那样的动人而富有诗意。长流不息的河水碧绿似染，水流时急时缓，河水时深时浅。水浅处船家用撑杆点，水深处船家用木浆划，河面上竹筏点点，还不时有水上人家的卖粽子小舟和捕鱼的鱼鹰，游客们嬉笑阵阵。","lat":28.072705,"lon":116.98516,"name":"竹筏码头","strokeId":105}';
+                var json2 =
+                    '{"description":"龙虎山的高空栈道镶嵌在悬崖绝壁之上，曾有人质疑栈道的修建破坏了整个丹霞景观，不可否认的是栈道的修建也方便了游人观赏丹霞美景，开发与保护本身就是个矛盾体。高空栈道时而在峭壁盘环时而穿越岩洞。","lat":28.107481,"lon":116.986913,"name":"高空栈道","strokeId":113}';
+                //                 var str = excludeSpecial(json);
+                // 				alert(str);
+                var obj = JSON.parse(json2);
+                alert(obj.description)
+            });
+        });
+    </script>
+</head>
+
+<body>
+    hello world
+    <input type="button" id="btn" value="解析" />
+</body>
+
+</html>
