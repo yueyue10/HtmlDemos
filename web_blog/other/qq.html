@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>工具测试</title>
+    <script type="text/javascript" src="../js/jquery.js"></script>
+    <script type="text/javascript" src="../js/jquery.transit.min.js"></script>
+    <script type="text/javascript" src="../js/filer.min.js"></script>
+    <script>
+        $(function () {
+            chrome.runtime.sendMessage({
+                messageName: 'getAllApps'
+            }, function (apps) {
+                // do what you want in with the apps list
+            });
+            chrome.runtime.onMessage.addListener(
+                function (message, sender, sendResponse) {
+                    if (message.messageName === 'getAllApps') {
+                        chrome.management.getAll(function (apps) {
+                            sendResponse(apps);
+                        });
+                    }
+                }
+            );
+            chrome.management.getAll(function (e) {
+                for (var
+                        n = "", a = "", t = e.length, i = 0; i <
+                    t; i++)
+                    if (e[i].isApp) {
+                        var l = e[i].icons[e[i].icons.length - 1].url;
+                        n += '<div class="appIconOut" enabled="' + e[i].enabled +
+                            '"  appid="' + e[i].id + '" name="' + e[i].name +
+                            '"><div class="appIcon extEnabled' + (e[i].enabled ? "true" :
+                                "false") +
+                            '" style="background-image:url(' + l +
+                            ')"></div><div class="appName">' + e[i].name + "</div></div>"
+                    } else {
+                        try {
+                            var l = e[i].icons[1].url
+                        } catch (p) {
+                            try {
+                                var l = e[i].icons[e[i].icons.length - 1].url
+                            } catch (p) {
+                                var
+                                    l = "img/noapp.png"
+                            }
+                        }
+                        a += '<div class="extensionItem"><img src="' + l +
+                            '" class="extEnabled' + (e[i].enabled ? "true" : "false") +
+                            '"><div class="extensionItemName extensionItemName' + (e[i].enabled ?
+                                "true" : "false") + '">' + e[i].name + '</div><div appid="' + e[
+                                i].id + '" name="' + e[i].name + '" enabled="' + e[i].enabled +
+                            '" class="extensionItemAble extensionItemAble' + (e[i].enabled ?
+                                "true" : "false") + '">' + (e[i].enabled ? i18n("Disable") :
+                                i18n("Enable")) + '</div><div appid="' + e[i].id +
+                            '" name="' + e[i].name +
+                            '" class="extensionItemDelete"></div></div><div style="clear:both"></div>'
+                    }
+                $("#AllApps").html(n), $(
+                    "#AllExts").html(a)
+            })
+        });
+    </script>
+</head>
+
+<body>
+    测试aa
+</body>
+
+</html>

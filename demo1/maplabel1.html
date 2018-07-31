@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+<style type="text/css">
+body, html {
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	font-family: "微软雅黑";
+}
+
+#allmap {
+	height: 500px;
+	width: 100%;
+}
+
+#control {
+	width: 100%;
+}
+</style>
+<script type="text/javascript"
+	src="http://api.map.baidu.com/api?v=2.0&ak=ZUONbpqGBsYGXNIYHicvbAbM"></script>
+<script src="js/jquery-1.8.3.js"></script>
+<title>地图标签-marker和label拼接展示</title>
+</head>
+<body id="body">
+	<div id="allmap"></div>
+	<div id="control">
+		Id: <input type="text" id="userId" name="userId" value="">
+		Pid: <input type="text" id="password" name="password" value="">
+		<button onclick="getJsonData();">提交</button>
+		<table border="1">
+			<tbody id="table">
+		</table>
+		<table border="1">
+			<tbody id="table_value">
+		</table>
+		<button onclick="getlinepoints();">获取区域内的经纬度</button>
+	</div>
+	<script type="text/JavaScript">
+		
+		// 绘制地图-百度地图API功能
+		var map = new BMap.Map("allmap", {
+		enableMapClick : false
+			});
+		var mpoint=new BMap.Point(116.987664, 28.123611);
+		map.centerAndZoom(mpoint, 15);
+		map.enableScrollWheelZoom();
+		var markerIcon = new BMap.Icon("img/icon_marker.png", new BMap.Size(100,100));
+		var marker = new BMap.Marker(mpoint,{icon: markerIcon});
+		//-------------------------------------------------------------
+		var body=document.getElementById("body");
+		var bodyWidth=body.clientWidth;
+		var labelWidth=bodyWidth/7+"px";
+		console.log(labelWidth)
+		var text="古人经受了太多的战争和灾害之苦，梦寐以求的就是宁静和太平，先辈的遗愿选择了将祖先安葬于凌空绝壁之上的崖葬，让祖先在一个青山环抱、碧水环绕、宁静幽美的环境中得到永远安息。当时的人坚信:\"弥高者以为至孝，高葬者必有好报\"，他们就把祖先的棺椁抬上溪流边陡峭的绝壁，放置在几乎与水面垂直的天然岩洞中，久而久之，就形成了独特的悬棺景观。";
+		var lineNum=text.length/13;//行数
+		var yOffset=-(lineNum*15+20);//y粥偏移量
+		var lineHight=(lineNum*15+10)+"px";//文本高度
+		var label = new BMap.Label("",{offset:new BMap.Size(20,yOffset)});
+		label.setStyle({
+			width: labelWidth,
+			color: '#fff',
+			background: '#F11B1B',
+			border: '1px solid "#ff8355"',
+			borderRadius: "15px 0 15px 0",
+			// textAlign: "left",
+			height: lineHight,
+			// lineHeight: "50px",
+			wordWrap: "break-word",  
+			wordBreak: "break-all",
+			whiteSpace:"normal",
+			paddingLeft:"10px",
+			paddingRight:"10px",
+			paddingTop:"10px"
+			});
+		label.setContent(text);
+		marker.setLabel(label);
+		map.addOverlay(marker);
+		
+	</script>
+</body>
+</html>

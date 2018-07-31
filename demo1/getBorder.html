@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+<style type="text/css">
+body, html {
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	font-family: "微软雅黑";
+}
+
+#allmap {
+	height: 500px;
+	width: 100%;
+}
+
+#control {
+	width: 100%;
+}
+</style>
+<script type="text/javascript"
+	src="http://api.map.baidu.com/api?v=2.0&ak=ZUONbpqGBsYGXNIYHicvbAbM"></script>
+<script src="js/jquery.js"></script>
+<title>百度地图边界点采集</title>
+</head>
+<body>
+	<div id="allmap"></div>
+	<div id="control">
+		Id: <input type="text" id="userId" name="userId" value="">
+		Pid: <input type="text" id="password" name="password" value="">
+		<button onclick="getJsonData();">提交</button>
+		<table border="1">
+			<tbody id="table">
+		</table>
+		<table border="1">
+			<tbody id="table_value">
+		</table>
+		<button onclick="getlinepoints();">获取区域内的经纬度</button>
+	</div>
+	<script type="text/JavaScript">
+		//请求数据
+		function getJsonData() {
+			//配置请求参数
+			var userId = document.getElementById("userId").value;
+			var password = document.getElementById("password").value;
+			if (userId == '') {
+				alert("请输入用户帐号!");
+				document.getElementById("userId").focus();
+				return false;
+			}
+			if (password == '') {
+				alert("请输入登录密码!");
+				document.getElementById("password").focus();
+				return false;
+			}
+			//网络请求
+			$.get("/mServer/SpotScope", {
+				userId : userId,
+				password : password
+			}).done(function(data) {
+				console.log(data);
+				alert(data);
+				//取出json数据里面的value数据
+				var jsonObj = JSON.parse(data);
+				var data_value = jsonObj.value;
+				console.log(data_value);
+				//把value里面的数据放入到景点数组和景点边界数组里面
+				var spots = [];//景点数组
+				for (var i = 0; i < data_value.length; i++) {
+					spots.push(data_value[i]);
+				}
+				setTable(1, spots);
+				setTableValue(1, spots);
+			});
+		}
+		//创建表格
+		function getColumnDetail(column) {
+			column.style.color = "blue"; //将被点击的单元格设置为蓝色   
+			console.log(column.data);
+			setMapCenter(column.data);
+			var sides = [];//景点边界数组
+			for (var j = 0; j < column.data.sides.length; j++) {
+				sides.push(new BMap.Point(column.data.sides[j].lon,
+						column.data.sides[j].lat));
+			}
+			console.log(sides);
+			addPolygon(sides);
+			//alert(column.innerHTML); //弹出被点单元格里的内容   
+		}
+		//--trLineNumber为动态表格行数，tdData为动态表格每行单元格的数据，数据类型为数组
+		//var array=["Saab","Volvo","BMW"];
+
+		function setTable(trLineNumber, tdData) {
+			console.log(tdData.length);
+			var _table = document.getElementById("table");
+			var _row;
+			var _cell;
+			for (var i = 0; i < trLineNumber; i++) {
+				_row = document.createElement("tr");
+				document.getElementById("table").appendChild(_row);
+				for (var j = 0; j < tdData.length; j++) {
+					_cell = document.createElement("td");
+					_cell.onclick = function() {
+						getColumnDetail(this)
+					}; //为每个单元格增加单击事件   
+					_cell.innerText = tdData[j].name;
+					_cell.data = tdData[j];
+					_row.appendChild(_cell);
+				}
+			}
+		}
+
+		function setTableValue(trLineNumber, tdData) {
+			console.log(tdData.length);
+			var _table = document.getElementById("table_value");
+			var _row;
+			var _cell;
+			for (var i = 0; i < trLineNumber; i++) {
+				_row = document.createElement("tr");
+				document.getElementById("table_value").appendChild(_row);
+				for (var j = 0; j < tdData.length; j++) {
+					_cell = document.createElement("td");
+					var tdObj = {};
+					tdObj.id = tdData[j].id;
+					tdObj.name = tdData[j].name;
+					//用于将 JavaScript 值转换为 JSON 字符串。
+					var jsonStr = JSON.stringify(tdObj);
+					_cell.innerText = jsonStr;
+					_row.appendChild(_cell);
+				}
+			}
+		}
+		// 绘制地图-百度地图API功能
+		var markerIcon = new BMap.Icon("img/icon_marker.png", new BMap.Size(20,
+				20));
+		var map = new BMap.Map("allmap", {
+			enableMapClick : false
+		});
+		map.centerAndZoom(new BMap.Point(116.987664, 28.123611), 15);
+		map.enableScrollWheelZoom();
+
+		// 设置地图中心位置
+		function setMapCenter(point) {
+			map.clearOverlays();
+			console.log(point.lon + "," + point.lat);
+			map.panTo(new BMap.Point(point.lon, point.lat), 15);
+			var marker = new BMap.Marker(new BMap.Point(point.lon, point.lat));
+			map.addOverlay(marker);
+			map.enableScrollWheelZoom();
+		}
+		//创建多边形
+		var polygon;
+		function addPolygon(spots_sides) {
+			polygon = new BMap.Polygon(spots_sides, {
+				strokeColor : "blue",
+				strokeWeight : 2,
+				strokeOpacity : 0.5
+			});
+			map.addOverlay(polygon); //增加多边形
+			polygon.enableEditing();
+			polygon.addEventListener("click", getlinepoints());
+			map.enableScrollWheelZoom();
+		}
+		//获取绘制的区域的边界经纬度
+		function getlinepoints() {
+			var path = polygon.getPath();
+			var path_json = JSON.stringify(path);
+			alert(path_json);
+		}
+	</script>
+</body>
+</html>

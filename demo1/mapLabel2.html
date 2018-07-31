@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+<style type="text/css">
+body, html {
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	font-family: "微软雅黑";
+}
+
+#allmap {
+	height: 500px;
+	width: 100%;
+}
+
+#control {
+	width: 100%;
+}
+</style>
+<script type="text/javascript"
+	src="http://api.map.baidu.com/api?v=2.0&ak=ZUONbpqGBsYGXNIYHicvbAbM"></script>
+<script src="js/jquery-1.8.3.js"></script>
+<title>百度地图Demo-ComplexCustomOverlay自定义覆盖物</title>
+</head>
+<body id="body">
+	<div id="allmap"></div>
+	<div id="control">
+		Id: <input type="text" id="userId" name="userId" value="">
+		Pid: <input type="text" id="password" name="password" value="">
+		<button onclick="getJsonData();">提交</button>
+		<table border="1">
+			<tbody id="table">
+		</table>
+		<table border="1">
+			<tbody id="table_value">
+		</table>
+		<button onclick="getlinepoints();">获取区域内的经纬度</button>
+	</div>
+	<script type="text/JavaScript">
+		// 绘制地图-百度地图API功能
+		var bmap = new BMap.Map("allmap", {
+		enableMapClick : false
+			});
+		var mpoint=new BMap.Point(116.987664, 28.123611);
+		bmap.centerAndZoom(mpoint, 15);
+		bmap.enableScrollWheelZoom();
+		//-------------------------------------------------------------
+		// 复杂的自定义覆盖物
+		function ComplexCustomOverlay(point, text, mouseoverText){
+		  this._point = point;
+		  this._text = text;
+		  this._overText = mouseoverText;
+		}
+		ComplexCustomOverlay.prototype = new BMap.Overlay();
+		ComplexCustomOverlay.prototype.initialize = function(map){
+		  this._map = map;
+      var div = this._div = document.createElement("div");
+      div.style.position = "absolute";
+      div.style.zIndex = BMap.Overlay.getZIndex(this._point.lat);
+      div.style.backgroundColor = "#EE5D5B";
+      div.style.border = "1px solid #BC3B3A";
+      div.style.color = "white";
+      div.style.height = "18px";
+      div.style.padding = "2px";
+      div.style.lineHeight = "18px";
+      div.style.whiteSpace = "nowrap";
+      div.style.MozUserSelect = "none";
+      div.style.fontSize = "12px"
+      var span = this._span = document.createElement("span");
+      div.appendChild(span);
+      span.appendChild(document.createTextNode(this._text));      
+      var that = this;
+
+      var arrow = this._arrow = document.createElement("div");
+      arrow.style.background = "url(img/label.png) no-repeat";
+      arrow.style.position = "absolute";
+      arrow.style.width = "11px";
+      arrow.style.height = "10px";
+      arrow.style.top = "22px";
+      arrow.style.left = "10px";
+      arrow.style.overflow = "hidden";
+      div.appendChild(arrow);
+		 
+		  div.onmouseover = function(){
+			this.style.backgroundColor = "#6BADCA";
+			this.style.borderColor = "#0000ff";
+			this.getElementsByTagName("span")[0].innerHTML = that._overText;
+			arrow.style.backgroundPosition = "0px -20px";
+		  }
+
+		  div.onmouseout = function(){
+			this.style.backgroundColor = "#EE5D5B";
+			this.style.borderColor = "#BC3B3A";
+			this.getElementsByTagName("span")[0].innerHTML = that._text;
+			arrow.style.backgroundPosition = "0px 0px";
+		  }
+
+		  bmap.getPanes().labelPane.appendChild(div);
+		  return div;
+		}
+		ComplexCustomOverlay.prototype.draw = function(){
+		  var map = this._map;
+		  var pixel = map.pointToOverlayPixel(this._point);
+		  this._div.style.left = pixel.x - parseInt(this._arrow.style.left) + "px";
+		  this._div.style.top  = pixel.y - 30 + "px";
+		}
+		var txt = "银湖海岸城", mouseoverTxt = txt + " " + parseInt(Math.random() * 1000,10) + "套" ;
+			
+		var myCompOverlay = new ComplexCustomOverlay(new BMap.Point(116.987664, 28.123611), "银湖海岸城",mouseoverTxt);
+
+		bmap.addOverlay(myCompOverlay);
+		
+	</script>
+</body>
+</html>
