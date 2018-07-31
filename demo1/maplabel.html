@@ -52,9 +52,9 @@ body, html {
 		// var body=document.getElementById("body");
 		// var bodyWidth=body.clientWidth;
 		// var labelWidth=parseInt(bodyWidth/7)+"px";
-		var labelWidth=parseInt(window.screen.width/10)+"px";
+		var labelWidth=parseInt(document.documentElement.clientWidth/10)+"px";
 		console.log(labelWidth)
-		var text="啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊"
+		var text="啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊"
 		function ComplexCustomOverlay(point, text, mouseoverText){
 				this._point = point;
 				this._text = text;
@@ -98,8 +98,8 @@ body, html {
 		ComplexCustomOverlay.prototype.draw = function(){
 				var map = this._map;
 				var pixel = map.pointToOverlayPixel(this._point);
-				this._div.style.left = pixel.x - parseInt(this._arrow.style.left) + "px";
-				this._div.style.top  = pixel.y - this._div.offsetHeight-15 + "px";
+				this._div.style.left = pixel.x - parseInt(this._arrow.style.left)-20 + "px";
+				this._div.style.top  = pixel.y - this._div.offsetHeight -38+ "px";
 				var h = this._div.offsetHeight;  //高度
 		}
 		var txt = "银湖海岸城", mouseoverTxt = txt + " " + parseInt(Math.random() * 1000,10) + "套" ;
